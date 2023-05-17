@@ -6,6 +6,7 @@ import kz.itstep.springboottest.model.Lesson;
 import kz.itstep.springboottest.repository.LessonRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,5 +23,26 @@ public class LessonRepositoryImpl implements LessonRepository {
         else {
             LessonData.lessons.add(lesson);
         }
+    }
+
+    @Override
+    public Lesson updateLessonById(Long id, Lesson lesson) {
+        if(lesson==null){
+            throw new LessonException("Lesson is null");
+        }
+        Lesson foundLesson = get(id).orElseThrow(()->new LessonException("Lesson with id "+ id + " does not exist"));
+        foundLesson.setName(lesson.getName());
+
+        return foundLesson;
+    }
+
+    @Override
+    public void deleteAllByName(String name) {
+        LessonData.lessons.removeIf(l -> l.getName().equals(name));
+    }
+
+    @Override
+    public List<Lesson> getAll() {
+        return LessonData.lessons;
     }
 }
